@@ -15,6 +15,7 @@ double euclidean_distance(const vector<double>&, const vector<double>&);
 void mean_point(vector<double> &mean, const vector<double> &pnt_1, const vector<double> &pnt_2);
 double discrete_frechet_distance(const Curve&, const Curve&, Curve& = default_curve, bool = false);
 double dynamic_time_wrapping(const Curve&, const Curve&);
+double c_rmsd(const Curve&, const Curve&);
 double compute_distance(const Curve &curve_1, const Curve &curve_2, const char*);
 
 #endif
