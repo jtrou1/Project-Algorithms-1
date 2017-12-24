@@ -1,7 +1,7 @@
 CC = g++
 FLAGS = -g -Wall
 OUT = run
-OBJS = main.o file_functions.o
+OBJS = main.o file_functions.o curve.o
 EIGEN_PATH = eigen
 
 run: $(OBJS)
