@@ -1,3 +1,7 @@
+# Others
+run
+.*.swp
+
 # Prerequisites
 *.d
 
