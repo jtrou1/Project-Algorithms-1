@@ -36,5 +36,8 @@ class Curve {
 };
 
 extern vector<Curve> input_curves;
+extern int num_of_clusters;
+extern int global_k;
+extern int global_L;
 
 #endif
