@@ -30,7 +30,7 @@ int main() {
     vector<vector<int> > clusters(num_of_clusters);
     double silhouette = 0;
 
-    clustering(centroids,clusters, "DFT", silhouette, 1, 2);
+    clustering(centroids,clusters, "C-RMSD", silhouette, 1, 2);
 
     return 0;
 }
