@@ -8,13 +8,14 @@ using namespace std;
 
 int main() {
     ios::sync_with_stdio(false);
-    
+    srand(time(NULL));
+
     num_of_clusters = 2;
     global_k = 2;
-    global_L = 3; 
+    global_L = 3;
 
     read_file("input.txt");
-    
+
     mem_distance = new double*[(int)input_curves.size()];
 
     for (int i = 0; i < (int)input_curves.size(); ++i) {
@@ -24,12 +25,12 @@ int main() {
             mem_distance[i][j] = -1;
         }
     }
-    
+
     vector<const Curve*> centroids(num_of_clusters);
     vector<vector<int> > clusters(num_of_clusters);
-    vector<double> silhouette_cluster(num_of_clusters);
+    double silhouette = 0;
 
-    clustering(silhouette_cluster, centroids,clusters, "DFT", 1, 2);
+    clustering(centroids,clusters, "DFT", silhouette, 1, 2);
 
     return 0;
 }
