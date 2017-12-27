@@ -173,6 +173,7 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2) {
             xc[j] = xc[j] + (double)(curve_1.get_coord_point(j, i) / curve_1.get_length());
         }
     }
+    
     for (int i = 0; i < curve_2.get_length(); ++i) {
         for (int j = 0; j < curve_2.get_dimension(); ++j) {
             yc[j] = yc[j] + (double)(curve_2.get_coord_point(j, i) / curve_2.get_length());
