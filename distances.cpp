@@ -161,7 +161,7 @@ double dynamic_time_wrapping(const Curve &curve_1, const Curve &curve_2) {
     return result;
 }
 
-double c_rmsd(const Curve &curve_1, const Curve &curve_2) {
+double c_rmsd(const Curve &curve_1, const Curve &curve_2, const char* method) {
     vector<double> xc(curve_1.get_dimension());
     vector<double> yc(curve_2.get_dimension());
     vector<double> point;
@@ -202,7 +202,7 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2) {
     }
 
     MatrixXd Q = svd.matrixU() * (svd.matrixV()).transpose();
-
+    
     if (Q.determinant() < 0) {
         MatrixXd U = svd.matrixU();
 
@@ -212,8 +212,30 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2) {
 
         Q = U * (svd.matrixV()).transpose();
     }
-
-    return (matrix_X * Q - matrix_Y).norm() / sqrt(curve_1.get_length());
+    
+    if (!strcmp(method, "C-RMSD/FRB")) {
+        return (matrix_X * Q - matrix_Y).norm() / sqrt(curve_1.get_length());
+    } else {
+        Curve temp_curve;
+        MatrixXd temp_matrix = matrix_X * Q;
+        vector<double> point;
+        point.resize(curve_1.get_dimension());
+        
+        for (int i = 0; i < curve_2.get_length(); ++i) {
+            for (int j = 0; j < curve_2.get_dimension(); ++j) {
+                point[j] = temp_matrix(i, j);
+            }
+            
+            temp_curve.insert_point(point);
+        }
+        if (!strcmp(method, "C-RMSD/DFT")) {
+            return compute_distance(temp_curve, curve_2, "DFT") / sqrt(curve_1.get_length());
+        } else if (!strcmp(method, "C-RMSD/DTW")) {
+            return compute_distance(temp_curve, curve_2, "DTW") / sqrt(curve_1.get_length());
+        }
+    }
+    
+    return -1;
 }
 
 double compute_distance(const Curve &curve_1, const Curve &curve_2, const char *dist_function) {
@@ -229,8 +251,8 @@ double compute_distance(const Curve &curve_1, const Curve &curve_2, const char *
         dist = discrete_frechet_distance(curve_1, curve_2);
     } else if (!strcmp(dist_function, "DTW")) {
         dist = dynamic_time_wrapping(curve_1, curve_2);
-    } else if(!strcmp(dist_function, "C-RMSD")) {
-        dist = c_rmsd(curve_1, curve_2);
+    } else if(!strncmp(dist_function, "C-RMSD", 6)) {
+        dist = c_rmsd(curve_1, curve_2, dist_function);
     }
 
     if (curve_1.get_int_id() != -1 && curve_2.get_int_id() != -1) {
