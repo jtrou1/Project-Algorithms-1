@@ -19,6 +19,7 @@ void perror_exit(const char*);
 double uniform_distribution(double, double);
 double normal_distribution(double, double);
 double dot_product(const vector<double>&, const vector<double>&);
+double triangle_area(double, double, double, double, double, double);
 void insert_curves_into_hashtables(vector<HashTable>&, double, const char*);
 void search_curves_from_hashtables(const vector<HashTable>&, double, double, const char*, const char* , vector<set<Curve> >&, const vector<bool>&, const vector<const Curve*>&, vector<bool>&, bool = true);
 void general_search(const vector<HashTable>&, double, double, const char*, const char*, vector<set<Curve> >&, const vector<const Curve*>&, vector<bool>&, vector<bool>&);

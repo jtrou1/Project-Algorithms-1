@@ -3,6 +3,7 @@
 #include "file_functions.h"
 #include "cluster.h"
 #include "distances.h"
+#include "help_functions.h"
 
 using namespace std;
 
@@ -31,6 +32,6 @@ int main() {
     double silhouette = 0;
 
     clustering(centroids,clusters, "C-RMSD", silhouette, 1, 2);
-    
+
     return 0;
 }

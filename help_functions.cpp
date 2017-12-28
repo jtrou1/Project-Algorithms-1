@@ -65,6 +65,13 @@ double dot_product(const vector<double> &vec_1, const vector<double> &vec_2) {
     return dot;
 }
 
+double triangle_area(double x1, double y1, double x2, double y2, double x3, double y3) {
+    double ret = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1); // cross product, determinant
+    ret = fabs(ret) / 2;
+
+    return ret;
+}
+
 void insert_curves_into_hashtables(vector<HashTable> &hashtables, double delta, const char *hash_function) {
     vector<Curve> concat_curves(input_curves.size(), Curve());
     
