@@ -31,6 +31,6 @@ int main() {
     double silhouette = 0;
 
     clustering(centroids,clusters, "C-RMSD", silhouette, 1, 2);
-
+    
     return 0;
 }
