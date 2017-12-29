@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <math.h>
+#include "distances.h"
 #include "help_functions.h"
 
 char *get_arguments(const char *argv[], int len, const char *flag, bool same) {
@@ -63,6 +64,30 @@ double dot_product(const vector<double> &vec_1, const vector<double> &vec_2) {
     }
     
     return dot;
+}
+
+double triangle_area(double x1, double y1, double x2, double y2, double x3, double y3) {
+    double ret = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1); // cross product, determinant
+    ret = fabs(ret) / 2;
+
+    return ret;
+}
+
+double circumradius(double x1, double y1, double x2, double y2, double x3, double y3) {
+    vector<double> pnt_1(2), pnt_2(2), pnt_3(2);
+
+    pnt_1[0] = x1, pnt_1[1] = y1;
+    pnt_2[0] = x2, pnt_2[1] = y2;
+    pnt_3[0] = x3, pnt_3[1] = y3;
+
+    double side_1 = sqrt(euclidean_distance_square(pnt_1, pnt_2));
+    double side_2 = sqrt(euclidean_distance_square(pnt_1, pnt_3));
+    double side_3 = sqrt(euclidean_distance_square(pnt_2, pnt_3));
+    
+    double ret = side_1 * side_2 * side_3;
+    ret /= 4.0 * triangle_area(x1, y1, x2, y2, x3, y3);
+
+    return ret;
 }
 
 void insert_curves_into_hashtables(vector<HashTable> &hashtables, double delta, const char *hash_function) {
