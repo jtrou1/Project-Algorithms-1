@@ -17,5 +17,8 @@ double discrete_frechet_distance(const Curve&, const Curve&, Curve& = default_cu
 double dynamic_time_wrapping(const Curve&, const Curve&);
 double c_rmsd(const Curve&, const Curve&, const char*);
 double compute_distance(const Curve &curve_1, const Curve &curve_2, const char*);
+void initialize_distances();
+void clear_distances();
+void free_distances();
 
 #endif

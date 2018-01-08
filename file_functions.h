@@ -5,6 +5,6 @@
 #include "curve.h"
 
 void read_file(const char*);
-void print_file(const char*, const vector<vector<int> >&, double, int);
+void print_file(const char*, const vector<vector<int> >&, double);
 
 #endif

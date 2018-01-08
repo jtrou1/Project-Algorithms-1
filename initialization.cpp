@@ -27,8 +27,6 @@ void k_means_pp(vector<const Curve*> &centroids, int len, const char *metric) {
     int pos;
     double max_sum = 0;
     
-    centroids.reserve(num_of_clusters); 
-
     if (num_of_clusters > 0) {
         pos = rand() % len;
     

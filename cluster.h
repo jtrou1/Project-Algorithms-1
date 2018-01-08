@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void clustering(vector<const Curve*>&, vector<vector<int> >&, const char*, double, int, int);
+void clustering(vector<const Curve*>&, vector<vector<int> >&, const char*, double&, int, int);
 void silhouette(const vector<const Curve*>&, vector<vector<int> >&, vector<double>&, const char*);
 
 #endif

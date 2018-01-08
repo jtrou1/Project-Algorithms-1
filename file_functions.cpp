@@ -36,17 +36,19 @@ void read_file(const char *file_name) {
     file.close();
 }
 
-void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value, int k) {
-    ofstream out_file(file_name);
+void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value) {
+    ofstream file(file_name);
     
-    out_file << "k: " << k << "\n";
-    out_file << "s: " << silhouette_value << "\n";
+    file << "k: " << num_of_clusters << "\n";
+    file << "s: " << silhouette_value << "\n";
     
     for (int i = 0; i < (int)clusters.size(); ++i) {
         for (int j = 0; j < (int)clusters[i].size() - 1; ++j) {
-            out_file << clusters[i][j] << " ";
+            file << clusters[i][j] << " ";
         }
             
-        out_file << clusters[i][(int)clusters[i].size() - 1] << "\n";
+        file << clusters[i][(int)clusters[i].size() - 1] << "\n";
     }
+
+    file.close();
 }
