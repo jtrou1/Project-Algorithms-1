@@ -262,3 +262,31 @@ double compute_distance(const Curve &curve_1, const Curve &curve_2, const char *
 
     return dist;
 }
+
+void initialize_distances() {
+    mem_distance = new double*[(int)input_curves.size()];
+
+    for (int i = 0; i < (int)input_curves.size(); ++i) {
+        mem_distance[i] = new double[(int)input_curves.size()];
+
+        for (int j = 0; j < (int)input_curves.size(); ++j) {
+            mem_distance[i][j] = -1;
+        }
+    }
+}
+
+void clear_distances() {
+    for (int i = 0; i < (int)input_curves.size(); ++i) {
+        for (int j = 0; j < (int)input_curves.size(); ++j) {
+            mem_distance[i][j] = -1;
+        }
+    }
+}
+
+void free_distances() {
+    for (int i = 0; i < (int)input_curves.size(); ++i) {
+        delete[] mem_distance[i];
+    }
+
+    delete[] mem_distance;
+}

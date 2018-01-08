@@ -1,6 +1,7 @@
 # Others
 run
 .*.swp
+*.dat
 
 # Prerequisites
 *.d

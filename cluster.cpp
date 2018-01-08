@@ -9,7 +9,7 @@
 #include "assignment.h"
 #include "update.h"
 
-void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters, const char *metric, double silhouette_value, int method_init, int method_update) {
+void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters, const char *metric, double &silhouette_value, int method_init, int method_update) {
     bool check;
     double value, prev_value = -1, prev_silhouette_value = -1;
     vector<double> silhouette_cluster(num_of_clusters);
@@ -35,9 +35,8 @@ void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters,
             }
 
             prev_value = value;
-
         } while(check);
-
+        
         silhouette(centroids, clusters, silhouette_cluster, metric);
         silhouette_value = 0;
 
