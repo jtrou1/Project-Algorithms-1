@@ -48,7 +48,7 @@ void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters,
         silhouette_value /= (double)num_of_clusters;
         double diff = fabs(silhouette_value - prev_silhouette_value);
 
-        if (prev_silhouette_value != -1 && diff < 0.1) {
+        if (prev_silhouette_value != -1 && diff < 0.05) {
             break;
         }
 
