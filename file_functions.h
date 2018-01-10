@@ -4,7 +4,7 @@
 #include <vector>
 #include "curve.h"
 
-void read_file(const char*);
+void read_file(const char*, const char*);
 void print_file(const char*, const vector<vector<int> >&, double);
 
 #endif
