@@ -2,6 +2,8 @@
 run
 .*.swp
 *.dat
+*.csv
+*.txt
 
 # Prerequisites
 *.d
