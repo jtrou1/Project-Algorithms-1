@@ -16,8 +16,10 @@ int main(int argc, const char *argv[]) {
     global_L = 3;
 
     const char *file_name = get_arguments(argv, argc, "-f", false);
-    read_file(file_name);
-    cout << "Read file" << endl;
+    const char *type = get_arguments(argv, argc, "-t", false);
+    const char *dist_func = get_arguments(argv, argc, "-d", false);
+    read_file(file_name, type);
+    cout << "Read file completed" << endl;
     
     initialize_distances();
 
@@ -25,20 +27,46 @@ int main(int argc, const char *argv[]) {
     vector<vector<int> > clusters(num_of_clusters);
     double silhouette_value = 0;
     
-    // run C-RMSD/FRB
-    clustering(centroids, clusters, "C-RMSD/FRB", silhouette_value, 1, 2);
-    print_file("crmsd.dat", clusters, silhouette_value); 
-    cout << "Ran C-RMSD/FRB" << endl;
-    
-    // clear data
-    silhouette_value = 0;
-    clear_distances();
+    if (!strcmp(type, "1")) { // particles
+        // run C-RMSD/FRB
+        clock_t begin = clock();
+        clustering(centroids, clusters, "C-RMSD/FRB", silhouette_value, 1, 2);
+        print_file("crmsd.dat", clusters, silhouette_value); 
 
-    // run CRMSD/DFT
-    clustering(centroids, clusters, "C-RMSD/DFT", silhouette_value, 1, 2);
-    print_file("frechet.dat", clusters, silhouette_value); 
-    cout << "Ran C-RMSD/DFT" << endl;
-    
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        cout << "C-RMSD/FRB completed (" << elapsed_secs << " secs)" << endl;
+
+        // clear data
+        silhouette_value = 0;
+        clear_distances();
+
+        // run CRMSD/DFT
+        begin = clock();
+        clustering(centroids, clusters, "C-RMSD/DFT", silhouette_value, 1, 2);
+        print_file("frechet.dat", clusters, silhouette_value); 
+        
+        end = clock();
+        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        cout << "C-RMSD/DFT completed (" << elapsed_secs << " secs)" << endl; 
+    } else if (!strcmp(type, "2")) { // roads
+        clock_t begin = clock();
+        
+        if (!strcmp(dist_func, "DFT")) {    
+            clustering(centroids, clusters, "C-RMSD/DFT", silhouette_value, 1, 2);
+            print_file("kmeans_ways_frechet.dat", clusters, silhouette_value); 
+            cout << "C-RMSD/DFT completed"; 
+        } else if (!strcmp(dist_func, "DTW")) {    
+            clustering(centroids, clusters, "C-RMSD/DTW", silhouette_value, 1, 2);
+            print_file("kmeans_ways_dtw.dat", clusters, silhouette_value); 
+            cout << "C-RMSD/DTW completed"; 
+        }
+            
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        cout << " (" << elapsed_secs << " secs)" << endl;
+    }
+
     free_distances();
     return 0;
 }

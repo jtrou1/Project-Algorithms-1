@@ -164,41 +164,39 @@ double dynamic_time_wrapping(const Curve &curve_1, const Curve &curve_2) {
 double c_rmsd(const Curve &curve_1, const Curve &curve_2, const char* method) {
     vector<double> xc(curve_1.get_dimension());
     vector<double> yc(curve_2.get_dimension());
-    vector<double> point;
-    int N1 = curve_1.get_length();
-    int N2 = curve_2.get_length();
+    int dim = curve_1.get_dimension();
+    int len = min(curve_1.get_length(), curve_2.get_length());
 
-    for (int i = 0; i < curve_1.get_length(); ++i) {
-        for (int j = 0; j < curve_1.get_dimension(); ++j) {
+    for (int i = 0; i < len; ++i) {
+        for (int j = 0; j < dim; ++j) {
             xc[j] = xc[j] + (double)(curve_1.get_coord_point(j, i) / curve_1.get_length());
         }
     }
     
-    for (int i = 0; i < curve_2.get_length(); ++i) {
-        for (int j = 0; j < curve_2.get_dimension(); ++j) {
+    for (int i = 0; i < len; ++i) {
+        for (int j = 0; j < dim; ++j) {
             yc[j] = yc[j] + (double)(curve_2.get_coord_point(j, i) / curve_2.get_length());
         }
     }
 
-    MatrixXd matrix_X(N1, curve_1.get_dimension());
-    MatrixXd matrix_Y(N2, curve_2.get_dimension());
+    MatrixXd matrix_X(len, dim), matrix_Y(len, dim);
 
-    for (int i = 0; i < curve_1.get_length(); ++i) {
-        for (int j = 0; j < curve_1.get_dimension(); ++j) {
+    for (int i = 0; i < len; ++i) {
+        for (int j = 0; j < dim; ++j) {
             matrix_X(i, j) = curve_1.get_coord_point(j, i) - xc[j];
         }
     }
 
-    for (int i = 0; i < curve_2.get_length(); ++i) {
-        for (int j = 0; j < curve_2.get_dimension(); ++j) {
+    for (int i = 0; i < len; ++i) {
+        for (int j = 0; j < dim; ++j) {
             matrix_Y(i, j) = curve_2.get_coord_point(j, i) - yc[j];
         }
     }
 
     JacobiSVD<MatrixXd> svd(matrix_X.transpose() * matrix_Y, Eigen::ComputeFullU | Eigen::ComputeFullV);
     const Eigen::VectorXd S = svd.singularValues();
-
-    if (S(2) <= 0.0) {
+    
+    if (S(dim - 1) <= 0.0) {
         return -1;
     }
 
@@ -207,32 +205,32 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2, const char* method) {
     if (Q.determinant() < 0) {
         MatrixXd U = svd.matrixU();
 
-        for (int i = 0; i < curve_1.get_dimension(); ++i) {
-            U(i, 2) *= -1;
+        for (int i = 0; i < dim; ++i) {
+            U(i, dim - 1) *= -1;
         }
 
         Q = U * (svd.matrixV()).transpose();
     }
     
     if (!strcmp(method, "C-RMSD/FRB")) {
-        return (matrix_X * Q - matrix_Y).norm() / sqrt(curve_1.get_length());
+        return (matrix_X * Q - matrix_Y).norm() / sqrt(len);
     } else {
         Curve temp_curve;
         MatrixXd temp_matrix = matrix_X * Q;
-        vector<double> point;
-        point.resize(curve_1.get_dimension());
-        
-        for (int i = 0; i < curve_2.get_length(); ++i) {
-            for (int j = 0; j < curve_2.get_dimension(); ++j) {
+        vector<double> point(dim);
+
+        for (int i = 0; i < len; ++i) {
+            for (int j = 0; j < dim; ++j) {
                 point[j] = temp_matrix(i, j);
             }
-            
+
             temp_curve.insert_point(point);
         }
+
         if (!strcmp(method, "C-RMSD/DFT")) {
-            return compute_distance(temp_curve, curve_2, "DFT") / sqrt(curve_1.get_length());
+            return compute_distance(temp_curve, curve_2, "DFT");
         } else if (!strcmp(method, "C-RMSD/DTW")) {
-            return compute_distance(temp_curve, curve_2, "DTW") / sqrt(curve_1.get_length());
+            return compute_distance(temp_curve, curve_2, "DTW");
         }
     }
     
