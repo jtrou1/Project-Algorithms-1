@@ -90,16 +90,13 @@ double circumradius(double x1, double y1, double x2, double y2, double x3, doubl
     return ret;
 }
 
-void insert_curves_into_hashtables(vector<HashTable> &hashtables, double delta, const char *hash_function) {
+void insert_curves_into_hashtables(HashTable &hashtable, double delta, const char *hash_function) {
     vector<Curve> concat_curves(input_curves.size(), Curve());
-    
-    for (int i = 0; i < global_L; ++i) {
-        multiple_grids(concat_curves, delta);
+    multiple_grids(concat_curves, delta);
 
-        for (int j = 0; j < (int)concat_curves.size(); ++j) {
-            hashtables[i].insert(input_curves[j], concat_curves[j], hash_function);
-            concat_curves[j].clear_curve();
-        }
+    for (int j = 0; j < (int)concat_curves.size(); ++j) {
+        hashtable.insert(input_curves[j], concat_curves[j], hash_function);
+        concat_curves[j].clear_curve();
     }
 }
 

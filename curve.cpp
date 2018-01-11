@@ -1,9 +1,7 @@
 #include "curve.h"
 
 vector<Curve> input_curves;
-int num_of_clusters;
-int global_k;
-int global_L;
+int num_of_clusters, global_k, global_L;
 
 Curve::Curve() {
     this->id = "";
