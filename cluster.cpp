@@ -37,15 +37,7 @@ void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters,
             prev_value = value;
         } while(check);
         
-        silhouette(centroids, clusters, silhouette_cluster, metric);
-        silhouette_value = 0;
-
-        for (int i = 0; i < num_of_clusters; ++i) {
-            double val = silhouette_cluster[i];
-            silhouette_value += val;
-        }
-
-        silhouette_value /= (double)num_of_clusters;
+        silhouette_value = silhouette(centroids, clusters, silhouette_cluster, metric);    
         double diff = fabs(silhouette_value - prev_silhouette_value);
 
         if (prev_silhouette_value != -1 && diff < 0.05) {
@@ -61,11 +53,17 @@ void clustering(vector<const Curve*> &centroids, vector<vector<int> > &clusters,
     }
 }
 
-void silhouette(const vector<const Curve*> &centroids, vector<vector<int> > &clusters, vector<double> &silhouette_cluster, const char *metric) {
+double silhouette(const vector<const Curve*> &centroids, vector<vector<int> > &clusters, vector<double> &silhouette_cluster, const char *metric) {
     vector<double> close_dist((int)input_curves.size(), -1), close_dist_sec((int)input_curves.size(), -1);
+    double silhouette_value = 0;
+    int non_empty_clusters = 0;
 
     for (int i = 0; i < (int)input_curves.size(); ++i) {
         for (int j = 0; j < (int)centroids.size(); ++j) {
+            if (clusters[j].empty()) {
+                continue;
+            }
+
             double dist = compute_distance(input_curves[i], *centroids[j], metric);
 
             if (close_dist[i] == -1 || dist < close_dist[i]) {
@@ -76,19 +74,30 @@ void silhouette(const vector<const Curve*> &centroids, vector<vector<int> > &clu
             }
         }
     }
+    
+    for (int i = 0; i < num_of_clusters; ++i) { 
+        if (clusters[i].empty()) {
+            continue;
+        }
 
-    for (int i = 0; i < num_of_clusters; ++i) {
         double diss_a = 0, diss_b = 0, res = 0;
 
         for (int j = 0; j < (int)clusters[i].size(); ++j) {
-            diss_a += close_dist[clusters[i][j]];
-            diss_b += close_dist_sec[clusters[i][j]];
-
+            diss_a = close_dist[clusters[i][j]];
+            diss_b = close_dist_sec[clusters[i][j]]; 
+            
             double s_elem = (diss_b - diss_a) / max(diss_a, diss_b);
             res += s_elem;
         }
 
         res = (double)(res / (int)clusters[i].size());
         silhouette_cluster[i] = res;
+        silhouette_value += res; 
+
+        ++non_empty_clusters;
     }
+    
+    silhouette_value /= (double)non_empty_clusters;
+
+    return silhouette_value;
 }

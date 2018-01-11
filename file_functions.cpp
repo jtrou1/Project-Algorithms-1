@@ -69,11 +69,22 @@ void read_file(const char *file_name, const char *type) {
 
 void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value) {
     ofstream file(file_name);
-    
-    file << "k: " << num_of_clusters << "\n";
+    int non_empty_clusters = 0;
+
+    for (int i = 0; i < (int)clusters.size(); ++i) {
+        if (!clusters[i].empty()) {
+            ++non_empty_clusters;
+        }
+    }
+
+    file << "k: " << non_empty_clusters << "\n";
     file << "s: " << silhouette_value << "\n";
     
     for (int i = 0; i < (int)clusters.size(); ++i) {
+        if (clusters[i].empty()) {
+            continue;
+        }
+
         for (int j = 0; j < (int)clusters[i].size() - 1; ++j) {
             file << clusters[i][j] << " ";
         }
