@@ -20,6 +20,7 @@ class Curve {
         void set_dimension(int);
         void insert_point(const vector<double>&);
         void clear_curve();
+        void remove_last_point();
         int get_dimension() const;
         int get_length() const;
         string get_id() const;
