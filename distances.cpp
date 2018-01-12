@@ -196,9 +196,6 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2, const char* method) {
     JacobiSVD<MatrixXd> svd(matrix_X.transpose() * matrix_Y, Eigen::ComputeFullU | Eigen::ComputeFullV);
     const Eigen::VectorXd S = svd.singularValues();
     
-    if (S(dim - 1) <= 0.0) {
-        return -1;
-    }
 
     MatrixXd Q = svd.matrixU() * (svd.matrixV()).transpose();
     
