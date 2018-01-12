@@ -9,6 +9,9 @@
 using namespace std;
 
 int main(int argc, const char *argv[]) {
+    cout << circumradius(37.9132,23.7071,37.9126,23.7063,37.9121,23.7056);
+    //return 0;
+
     ios::sync_with_stdio(false);
     srand(time(NULL));
 
@@ -17,6 +20,18 @@ int main(int argc, const char *argv[]) {
     const char *file_name = get_arguments(argv, argc, "-f", false);
     const char *type = get_arguments(argv, argc, "-t", false);
     const char *dist_func = get_arguments(argv, argc, "-d", false);
+    
+    if (!strcmp(type, "3")) {
+        clock_t begin = clock();
+        print_segments("athens.csv", "segment.csv");
+        
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        cout << "Print Segments completed (" << elapsed_secs << " secs)" << endl; 
+
+        return 0;
+    }
+    
     read_file(file_name, type);
     cout << "Read file completed" << endl;
     
@@ -53,11 +68,11 @@ int main(int argc, const char *argv[]) {
         
         if (!strcmp(dist_func, "DFT")) {    
             clustering(centroids, clusters, "C-RMSD/DFT", silhouette_value, 1, 2);
-            print_file("kmeans_ways_frechet.dat", clusters, silhouette_value); 
+            print_file("kmedoid_ways_frechet.dat", clusters, silhouette_value); 
             cout << "C-RMSD/DFT completed"; 
         } else if (!strcmp(dist_func, "DTW")) {    
             clustering(centroids, clusters, "C-RMSD/DTW", silhouette_value, 1, 2);
-            print_file("kmeans_ways_dtw.dat", clusters, silhouette_value); 
+            print_file("kmedoid_ways_dtw.dat", clusters, silhouette_value); 
             cout << "C-RMSD/DTW completed"; 
         }
             
