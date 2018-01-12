@@ -215,22 +215,24 @@ double c_rmsd(const Curve &curve_1, const Curve &curve_2, const char* method) {
     if (!strcmp(method, "C-RMSD/FRB")) {
         return (matrix_X * Q - matrix_Y).norm() / sqrt(len);
     } else {
-        Curve temp_curve;
+        Curve temp_curve_1, temp_curve_2;
         MatrixXd temp_matrix = matrix_X * Q;
-        vector<double> point(dim);
+        vector<double> point_1(dim), point_2(dim);
 
         for (int i = 0; i < len; ++i) {
             for (int j = 0; j < dim; ++j) {
-                point[j] = temp_matrix(i, j);
+                point_1[j] = temp_matrix(i, j);
+                point_2[j] = matrix_Y(i, j);
             }
 
-            temp_curve.insert_point(point);
+            temp_curve_1.insert_point(point_1);
+            temp_curve_2.insert_point(point_2);
         }
 
         if (!strcmp(method, "C-RMSD/DFT")) {
-            return compute_distance(temp_curve, curve_2, "DFT");
+            return compute_distance(temp_curve_1, temp_curve_2, "DFT");
         } else if (!strcmp(method, "C-RMSD/DTW")) {
-            return compute_distance(temp_curve, curve_2, "DTW");
+            return compute_distance(temp_curve_1, temp_curve_2, "DTW");
         }
     }
     

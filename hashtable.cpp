@@ -6,8 +6,8 @@
 #include "help_functions.h"
 #include "curve.h"
 
-HashTable::HashTable(int len) {
-    this->id = -1;
+HashTable::HashTable(int len, int id) {
+    this->id = id;
     this->len = len;
     this->table = new List[len+5];
 }
@@ -28,6 +28,10 @@ void HashTable::set_id(int id) {
 
 int HashTable::get_id() const {
     return id;
+}
+
+int HashTable::get_length() const {
+    return len;
 }
 
 long long HashTable::get_index(const Curve &curve, const char *hash_function) const {
