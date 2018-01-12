@@ -67,6 +67,39 @@ void read_file(const char *file_name, const char *type) {
     file.close();
 }
 
+void print_segment(const char *ath_csv, const char *seg_csv) {
+    ifstream file(ath_csv);
+    int num_conform, num_points = 0;
+    vector<double> point(2);
+    int way_id, int_id = 0;
+    char chr;
+    string type;
+    
+    ofstream file(seg_csv);
+    
+    
+    while (ath_csv >> way_id) {
+        Curve temp_curve;
+        ath_csv >> chr >> type >> chr;
+        seg_csv << int_id << ", " << way_id << ", "
+        while(chr != "\n" )
+            for (int j = 0; j < 2; ++j) {
+                ath_csv >> point[j];
+                
+            }
+            
+            if (!curve.is_empty() && curve.get_last_point() == point) { // remove duplicates
+                continue;
+            }
+            
+            curve.insert_point(point);
+        }
+        
+        input_curves.push_back(curve);
+    }
+    
+}
+
 void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value) {
     ofstream file(file_name);
     int non_empty_clusters = 0;
