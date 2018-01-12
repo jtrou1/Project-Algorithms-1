@@ -85,7 +85,13 @@ double circumradius(double x1, double y1, double x2, double y2, double x3, doubl
     double side_3 = sqrt(euclidean_distance_square(pnt_2, pnt_3));
     
     double ret = side_1 * side_2 * side_3;
-    ret /= 4.0 * triangle_area(x1, y1, x2, y2, x3, y3);
+    double area = triangle_area(x1, y1, x2, y2, x3, y3);
+
+    if (area == 0) {
+        return 0;
+    }
+
+    ret /= 4.0 * area;
 
     return ret;
 }

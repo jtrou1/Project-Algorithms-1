@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstring>
 #include "file_functions.h"
+#include "help_functions.h"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ void read_file(const char *file_name, const char *type) {
             for (int i = 1; i <= num_points; ++i) {
                 for (int j = 0; j < dim; ++j) {
                     file >> point[j];
-
+                    
                     if (i < num_points || j < dim - 1) {
                         file >> chr;
                     }
@@ -67,37 +68,67 @@ void read_file(const char *file_name, const char *type) {
     file.close();
 }
 
-void print_segment(const char *ath_csv, const char *seg_csv) {
-    ifstream file(ath_csv);
-    int num_conform, num_points = 0;
-    vector<double> point(2);
-    int way_id, int_id = 0;
+void print_segments(const char *init_csv, const char *final_csv) {
+    ifstream init_file(init_csv);
+    ofstream final_file(final_csv); 
+    int way_id, int_id = 0, dim = 2;
+    double circ_rad;
     char chr;
-    string type;
-    
-    ofstream file(seg_csv);
-    
-    
-    while (ath_csv >> way_id) {
-        Curve temp_curve;
-        ath_csv >> chr >> type >> chr;
-        seg_csv << int_id << ", " << way_id << ", "
-        while(chr != "\n" )
-            for (int j = 0; j < 2; ++j) {
-                ath_csv >> point[j];
+    vector<double> point(dim);
+     
+    while (init_file >> way_id) {
+        init_file >> chr;
+        while (init_file >> chr && chr >= 'a' && chr <= 'z') {} // read 'road type' and 'comma'
+
+        Curve curve;
+        circ_rad = 0;
+        
+        while (1) {
+            for (int j = 0; j < dim; ++j) {
+                init_file >> point[j] >> chr;
+            }
+            
+            if (curve.get_length() >= 2) {
+                double x1 = curve.get_coord_point(0, curve.get_length() - 2);
+                double y1 = curve.get_coord_point(1, curve.get_length() - 2);
+                double x2 = curve.get_coord_point(0, curve.get_length() - 1);
+                double y2 = curve.get_coord_point(1, curve.get_length() - 1);
+                double x3 = point[0];
+                double y3 = point[1];    
                 
+                circ_rad = circumradius(x1, y1, x2, y2, x3, y3);
             }
             
-            if (!curve.is_empty() && curve.get_last_point() == point) { // remove duplicates
-                continue;
+            cout << circ_rad << endl;
+            if (circ_rad > 4) {
+                final_file << int_id++ << "," << way_id << ",";
+                print_curve(final_file, curve, dim);
+                
+                circ_rad = 0;
+                curve.clear_curve();
+                curve.insert_point(point);
+            } else {
+                if (curve.is_empty() || curve.get_last_point() != point) { // remove duplicates
+                    curve.insert_point(point);
+                }
             }
             
-            curve.insert_point(point);
+            if (init_file.eof()) {
+                break;
+            }
+
+            if (chr != ',') {
+                init_file.seekg(-1, init_file.cur);
+                break;
+            }
         }
         
-        input_curves.push_back(curve);
+        final_file << int_id++ << "," << way_id << ",";
+        print_curve(final_file, curve, dim);
     }
-    
+
+    init_file.close();
+    final_file.close();
 }
 
 void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value) {
@@ -126,4 +157,20 @@ void print_file(const char *file_name, const vector<vector<int> > &clusters, dou
     }
 
     file.close();
+}
+
+void print_curve(ofstream &final_file, const Curve &curve, int dim) {
+    final_file << curve.get_length() << ",";
+
+    for (int i = 0; i < curve.get_length(); ++i) {
+        for (int j = 0; j < dim; ++j) {
+            final_file << curve.get_coord_point(j, i);
+
+            if (i < curve.get_length() - 1 || j < dim - 1) {
+                final_file << ",";
+            }
+        }
+    }
+
+    final_file << "\n";
 }
