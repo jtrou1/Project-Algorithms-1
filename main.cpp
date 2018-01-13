@@ -8,10 +8,8 @@
 
 using namespace std;
 
-int main(int argc, const char *argv[]) {
-    cout << circumradius(37.9132,23.7071,37.9126,23.7063,37.9121,23.7056);
-    //return 0;
 
+int main(int argc, const char *argv[]) {
     ios::sync_with_stdio(false);
     srand(time(NULL));
 

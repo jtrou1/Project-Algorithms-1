@@ -38,6 +38,10 @@ void Curve::clear_curve() {
     curve.clear();
 }
 
+void Curve::remove_last_point() {
+    curve.pop_back();
+}
+
 int Curve::get_dimension() const {
     return dim;
 }
