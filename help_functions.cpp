@@ -5,6 +5,7 @@
 #include <math.h>
 #include "distances.h"
 #include "help_functions.h"
+#include "cluster.h"
 
 char *get_arguments(const char *argv[], int len, const char *flag, bool same) {
     for (int i = 0; i < len; ++i) {
@@ -143,4 +144,35 @@ void general_search(const vector<HashTable> &hashtables, double delta, double R,
 
     // search without checking grid_curve for curves that we did not find anything before
     search_curves_from_hashtables(hashtables, delta, R, hash_function, dist_function, R_closest_curves, grid_curves_found, centroids, visited, false); 
+}
+
+double hashtable_silhouette(const HashTable &hashtable, vector<vector<int> > &clusters) {
+    double silhouette_value = 0;
+    num_of_clusters = 0;
+    
+    for (int i = 0; i < (int)hashtable.get_length(); ++i) {
+        if (!hashtable.is_empty_bucket(i)) {
+            ++num_of_clusters;
+        }
+    }
+    
+    vector<const Curve*> centroids(num_of_clusters);
+    vector<double> silhouette_cluster(num_of_clusters);
+    int pos = 0;
+    
+    clusters.resize(num_of_clusters);
+   
+    for (int i = 0; i < (int)hashtable.get_length(); ++i) {
+        if (!hashtable.is_empty_bucket(i)) {
+            clusters[pos].clear();
+            hashtable.insert_bucket_to_cluster(i, clusters[pos]);
+
+            int id = hashtable.get_first_id_bucket(i);
+            centroids[pos++] = &input_curves[id];
+        }
+    }
+ 
+    silhouette_value = silhouette(centroids, clusters, silhouette_cluster, "DFT");
+
+    return silhouette_value;
 }

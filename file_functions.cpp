@@ -182,11 +182,12 @@ void print_segments(const char *init_csv, const char *final_csv) {
     final_file.close();
 }
 
-void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value) {
+void print_file(const char *file_name, const vector<vector<int> > &clusters, double silhouette_value, double elapsed_secs) {
     ofstream file(file_name);
 
     file << "k: " << num_of_clusters << "\n";
     file << "s: " << silhouette_value << "\n";
+    file << "clustering_time: " << elapsed_secs << "\n"; 
 
     for (int i = 0; i < (int)clusters.size(); ++i) {
         for (int j = 0; j < (int)clusters[i].size() - 1; ++j) {

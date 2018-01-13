@@ -69,7 +69,7 @@ double silhouette(const vector<const Curve*> &centroids, vector<vector<int> > &c
             }
         }
     }
-    
+ 
     for (int i = 0; i < num_of_clusters; ++i) { 
         double diss_a = 0, diss_b = 0, res = 0;
 

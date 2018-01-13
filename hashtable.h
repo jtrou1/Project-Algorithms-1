@@ -18,6 +18,10 @@ class HashTable {
         void insert(const Curve&, const Curve&, const char*);
         void search(vector<Curve>&, const Curve&, const Curve&, const char*, const char*, double, vector<bool>&, bool = true) const;
         void print_bucket(int) const;
+        void print_bucket_in_file(int, ofstream&) const;
+        bool is_empty_bucket(int) const;
+        void insert_bucket_to_cluster(int, vector<int>&) const;
+        int get_first_id_bucket(int) const;
 };
 
 #endif

@@ -24,5 +24,6 @@ double circumradius(double, double, double, double, double, double);
 void insert_curves_into_hashtables(HashTable&, double, const char*);
 void search_curves_from_hashtables(const vector<HashTable>&, double, double, const char*, const char* , vector<set<Curve> >&, const vector<bool>&, const vector<const Curve*>&, vector<bool>&, bool = true);
 void general_search(const vector<HashTable>&, double, double, const char*, const char*, vector<set<Curve> >&, const vector<const Curve*>&, vector<bool>&, vector<bool>&);
+double hashtable_silhouette(const HashTable&, vector<vector<int> >&);
 
 #endif

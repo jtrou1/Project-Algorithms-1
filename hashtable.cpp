@@ -79,3 +79,19 @@ void HashTable::search(vector<Curve> &closer_curves, const Curve &curve, const C
 void HashTable::print_bucket(int index) const {
     table[index].print_list();
 }
+
+void HashTable::print_bucket_in_file(int index, ofstream &file) const {
+    table[index].print_list_in_file(file);
+}
+
+bool HashTable::is_empty_bucket(int index) const {
+    return table[index].is_empty();
+}
+
+void HashTable::insert_bucket_to_cluster(int index, vector<int> &cluster) const {
+    table[index].insert_list_to_cluster(cluster);
+}
+
+int HashTable::get_first_id_bucket(int index) const {
+    return table[index].get_first_id();
+}
